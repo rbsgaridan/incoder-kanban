@@ -249,7 +249,7 @@ export function useKanbanDrag(options: UseKanbanDragOptions = {}) {
         toColumnId: columnId,
         fromIndex: card.order,
         toIndex,
-        fromSwimlaneId,
+        fromSwimlaneId: fromSwimlaneId ?? undefined,
         toSwimlaneId: swimlaneId
       };
 

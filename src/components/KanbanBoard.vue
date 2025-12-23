@@ -7,7 +7,7 @@
  * Fully controlled via props with optional internal state management.
  */
 
-import { computed, toRef, watch } from 'vue';
+import { computed, toRef } from 'vue';
 import KanbanColumn from './KanbanColumn.vue';
 import { useKanbanState } from '../composables/useKanbanState';
 import { useKanbanDrag } from '../composables/useKanbanDrag';
@@ -151,7 +151,7 @@ const handleCardDragStart = (card: KanbanCard, event: DragEvent) => {
 /**
  * Handle card drag end
  */
-const handleCardDragEnd = (card: KanbanCard, event: DragEvent) => {
+const handleCardDragEnd = (_card: KanbanCard, event: DragEvent) => {
   drag.handleDragEnd(event);
 };
 

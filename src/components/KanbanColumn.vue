@@ -73,7 +73,7 @@ const columnHeaderStyle = computed(() => {
   return {
     borderTopColor: props.column.color,
     borderTopWidth: '3px',
-    borderTopStyle: 'solid'
+    borderTopStyle: 'solid' as const
   };
 });
 

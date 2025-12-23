@@ -49,8 +49,8 @@ const priorityClass = computed(() => {
 /**
  * Handle card click
  */
-const handleClick = (event: MouseEvent) => {
-  emit('click', event);
+const handleClick = (event: MouseEvent | KeyboardEvent) => {
+  emit('click', event as MouseEvent);
 };
 
 /**
@@ -280,6 +280,7 @@ const handleDragEnd = (event: DragEvent) => {
   line-height: 1.5;
   display: -webkit-box;
   -webkit-line-clamp: 3;
+  line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
