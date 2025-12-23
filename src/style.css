@@ -1,0 +1,57 @@
+/**
+ * Base styles for Kanban Board
+ * 
+ * These are minimal global styles that don't conflict with PrimeVue.
+ * Most styling is done via scoped styles in components using PrimeVue tokens.
+ */
+
+/* Global drag state classes */
+.kanban-dragging {
+  opacity: 0.5;
+  cursor: grabbing;
+}
+
+.kanban-drag-over {
+  background: rgba(var(--primary-color-rgb, 59, 130, 246), 0.05);
+  border: 2px dashed var(--primary-color, #3b82f6);
+}
+
+/* Prevent text selection during drag */
+.kanban-board[draggable="true"] {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Smooth scrolling */
+.kanban-board-columns,
+.kanban-board-swimlane-columns,
+.kanban-board-swimlanes {
+  scroll-behavior: smooth;
+}
+
+/* Focus visible for accessibility */
+.kanban-card:focus-visible,
+.kanban-column:focus-visible {
+  outline: 2px solid var(--primary-color, #3b82f6);
+  outline-offset: 2px;
+}
+
+/* Print styles */
+@media print {
+  .kanban-board {
+    overflow: visible !important;
+  }
+  
+  .kanban-board-columns,
+  .kanban-board-swimlane-columns {
+    overflow: visible !important;
+    flex-wrap: wrap;
+  }
+  
+  .kanban-column {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+}
