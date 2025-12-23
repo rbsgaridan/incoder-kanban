@@ -151,7 +151,7 @@ const handleCardDragStart = (card: KanbanCard, event: DragEvent) => {
 /**
  * Handle card drag end
  */
-const handleCardDragEnd = (event: DragEvent) => {
+const handleCardDragEnd = (card: KanbanCard, event: DragEvent) => {
   drag.handleDragEnd(event);
 };
 

@@ -8,8 +8,8 @@
 
 // Export main component
 export { default as KanbanBoard } from './components/KanbanBoard.vue';
-export { default as KanbanColumn } from './components/KanbanColumn.vue';
-export { default as KanbanCard } from './components/KanbanCard.vue';
+export { default as KanbanColumnComponent } from './components/KanbanColumn.vue';
+export { default as KanbanCardComposnent } from './components/KanbanCard.vue';
 
 // Export composables
 export { useKanbanState } from './composables/useKanbanState';

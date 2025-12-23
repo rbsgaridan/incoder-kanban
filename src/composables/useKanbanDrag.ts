@@ -194,8 +194,10 @@ export function useKanbanDrag(options: UseKanbanDragOptions = {}) {
     getCardsInColumn: (colId: KanbanId, swimId?: KanbanId) => KanbanCard[]
   ) => {
     event.preventDefault();
+    event.stopPropagation();
     
     if (!isDragEnabled.value || dragState.value.dragType !== 'card') {
+      resetDragState();
       return;
     }
 
@@ -203,15 +205,24 @@ export function useKanbanDrag(options: UseKanbanDragOptions = {}) {
     target.classList.remove('kanban-drag-over');
 
     const draggedId = dragState.value.draggedId;
-    if (!draggedId) return;
+    if (!draggedId) {
+      resetDragState();
+      return;
+    }
 
     const card = getCard(draggedId);
-    if (!card) return;
+    if (!card) {
+      resetDragState();
+      return;
+    }
 
     const fromColumnId = dragState.value.sourceColumnId;
     const fromSwimlaneId = dragState.value.sourceSwimlaneId;
     
-    if (!fromColumnId) return;
+    if (!fromColumnId) {
+      resetDragState();
+      return;
+    }
 
     // Calculate the drop index based on mouse position
     const cardsInColumn = getCardsInColumn(columnId, swimlaneId);
@@ -225,18 +236,25 @@ export function useKanbanDrag(options: UseKanbanDragOptions = {}) {
       }
     }
 
-    // Emit card moved event
-    const moveEvent: CardMoveEvent = {
-      card,
-      fromColumnId,
-      toColumnId: columnId,
-      fromIndex: card.order,
-      toIndex,
-      fromSwimlaneId,
-      toSwimlaneId: swimlaneId
-    };
+    // Check if the card actually moved to a different position
+    const actuallyMoved = columnId !== fromColumnId || 
+                          swimlaneId !== fromSwimlaneId ||
+                          toIndex !== card.order;
 
-    options.onCardMoved?.(moveEvent);
+    // Only emit card moved event if position actually changed
+    if (actuallyMoved) {
+      const moveEvent: CardMoveEvent = {
+        card,
+        fromColumnId,
+        toColumnId: columnId,
+        fromIndex: card.order,
+        toIndex,
+        fromSwimlaneId,
+        toSwimlaneId: swimlaneId
+      };
+
+      options.onCardMoved?.(moveEvent);
+    }
 
     // Emit drag end event
     options.onDragEnd?.({

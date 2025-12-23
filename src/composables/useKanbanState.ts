@@ -211,7 +211,8 @@ export function useKanbanState(props: UseKanbanStateOptions) {
     return Array.from(swimlaneIds).map((id, index) => ({
       id: id!,
       title: `Swimlane ${id}`,
-      order: index
+      order: index,
+      collapsed: false
     }));
   });
 
