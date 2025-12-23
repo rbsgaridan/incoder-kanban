@@ -5,7 +5,7 @@
  * and computed properties for the Kanban board.
  */
 
-import { computed, ref, watch, type Ref } from 'vue';
+import { computed, ref, type Ref } from 'vue';
 import type {
   KanbanCard,
   KanbanColumn,

@@ -9,7 +9,7 @@
 
 import { computed } from 'vue';
 import KanbanCard from './KanbanCard.vue';
-import type { KanbanCard as IKanbanCard, KanbanColumn, KanbanId } from '../types/kanban';
+import type { KanbanCard as IKanbanCard, KanbanColumn } from '../types/kanban';
 
 interface Props {
   column: KanbanColumn;

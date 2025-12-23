@@ -475,7 +475,7 @@ npm run type-check
 
 ## 📄 License
 
-MIT © [Your Name]
+MIT © [u40butch]
 
 ## 🤝 Contributing
 
