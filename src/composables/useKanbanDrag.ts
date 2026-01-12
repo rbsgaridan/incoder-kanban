@@ -35,7 +35,8 @@ export function useKanbanDrag(options: UseKanbanDragOptions = {}) {
     sourceColumnId: null,
     sourceSwimlaneId: null,
     dropColumnId: null,
-    dropSwimlaneId: null
+    dropSwimlaneId: null,
+    dropIndex: 0
   });
 
   // Track the element being dragged over
@@ -44,11 +45,11 @@ export function useKanbanDrag(options: UseKanbanDragOptions = {}) {
   /**
    * Check if drag is enabled
    */
-  const isDragEnabled = computed(() => 
+  const isDragEnabled = computed(() =>
     options.enableDragDrop?.value !== false
   );
 
-  const isColumnDragEnabled = computed(() => 
+  const isColumnDragEnabled = computed(() =>
     options.enableColumnDrag?.value !== false
   );
 
@@ -149,7 +150,7 @@ export function useKanbanDrag(options: UseKanbanDragOptions = {}) {
     }
 
     event.preventDefault();
-    
+
     if (event.dataTransfer) {
       event.dataTransfer.dropEffect = 'move';
     }
@@ -158,8 +159,27 @@ export function useKanbanDrag(options: UseKanbanDragOptions = {}) {
     dragState.value.dropColumnId = columnId;
     dragState.value.dropSwimlaneId = swimlaneId || null;
 
-    // Add visual feedback
+    // Calculate drop position based on mouse Y position
     const target = event.currentTarget as HTMLElement;
+    const cards = Array.from(target.querySelectorAll('.kanban-card:not(.kanban-dragging)'));
+
+    let dropIndex = cards.length; // Default to end of list
+
+    for (let i = 0; i < cards.length; i++) {
+      const card = cards[i] as HTMLElement;
+      const rect = card.getBoundingClientRect();
+      const cardMiddle = rect.top + rect.height / 2;
+
+      if (event.clientY < cardMiddle) {
+        dropIndex = i;
+        break;
+      }
+    }
+
+    // Store the calculated drop index
+    dragState.value.dropIndex = dropIndex;
+
+    // Add visual feedback
     if (target !== dragOverElement.value) {
       dragOverElement.value?.classList.remove('kanban-drag-over');
       target.classList.add('kanban-drag-over');
@@ -172,7 +192,7 @@ export function useKanbanDrag(options: UseKanbanDragOptions = {}) {
    */
   const handleDragLeave = (event: DragEvent) => {
     const target = event.currentTarget as HTMLElement;
-    
+
     // Only remove class if we're actually leaving the element
     // (not just entering a child)
     if (!target.contains(event.relatedTarget as Node)) {
@@ -195,7 +215,7 @@ export function useKanbanDrag(options: UseKanbanDragOptions = {}) {
   ) => {
     event.preventDefault();
     event.stopPropagation();
-    
+
     if (!isDragEnabled.value || dragState.value.dragType !== 'card') {
       resetDragState();
       return;
@@ -218,7 +238,7 @@ export function useKanbanDrag(options: UseKanbanDragOptions = {}) {
 
     const fromColumnId = dragState.value.sourceColumnId;
     const fromSwimlaneId = dragState.value.sourceSwimlaneId;
-    
+
     if (!fromColumnId) {
       resetDragState();
       return;
@@ -226,20 +246,22 @@ export function useKanbanDrag(options: UseKanbanDragOptions = {}) {
 
     // Calculate the drop index based on mouse position
     const cardsInColumn = getCardsInColumn(columnId, swimlaneId);
-    let toIndex = cardsInColumn.length;
 
-    // If dropping in the same column, adjust index
-    if (columnId === fromColumnId && swimlaneId === fromSwimlaneId) {
-      const fromIndex = cardsInColumn.findIndex(c => c.id === draggedId);
-      if (fromIndex !== -1) {
-        toIndex = fromIndex;
-      }
+    // Use the dropIndex calculated during dragOver, or default to end
+    let toIndex = dragState.value.dropIndex ?? cardsInColumn.length;
+
+    // If dropping in the same column, adjust index if needed
+    const isSameLocation = columnId === fromColumnId && swimlaneId === fromSwimlaneId;
+    const fromIndex = cardsInColumn.findIndex(c => c.id === draggedId);
+
+    if (isSameLocation && fromIndex !== -1 && toIndex > fromIndex) {
+      // If dropping after the original position, decrement toIndex
+      // because the card will be removed first
+      toIndex--;
     }
 
     // Check if the card actually moved to a different position
-    const actuallyMoved = columnId !== fromColumnId || 
-                          swimlaneId !== fromSwimlaneId ||
-                          toIndex !== card.order;
+    const actuallyMoved = !isSameLocation || fromIndex !== toIndex;
 
     // Only emit card moved event if position actually changed
     if (actuallyMoved) {
@@ -247,8 +269,8 @@ export function useKanbanDrag(options: UseKanbanDragOptions = {}) {
         card,
         fromColumnId,
         toColumnId: columnId,
-        fromIndex: card.order,
-        toIndex,
+        fromIndex: fromIndex >= 0 ? fromIndex : card.order,
+        toIndex: toIndex,
         fromSwimlaneId: fromSwimlaneId ?? undefined,
         toSwimlaneId: swimlaneId
       };
@@ -273,7 +295,7 @@ export function useKanbanDrag(options: UseKanbanDragOptions = {}) {
   const handleDragEnd = (event: DragEvent) => {
     const target = event.target as HTMLElement;
     target.classList.remove('kanban-dragging');
-    
+
     dragOverElement.value?.classList.remove('kanban-drag-over');
     dragOverElement.value = null;
 
@@ -310,16 +332,16 @@ export function useKanbanDrag(options: UseKanbanDragOptions = {}) {
    * Check if a specific card is being dragged
    */
   const isCardDragging = (cardId: KanbanId) => {
-    return dragState.value.dragType === 'card' && 
-           dragState.value.draggedId === cardId;
+    return dragState.value.dragType === 'card' &&
+      dragState.value.draggedId === cardId;
   };
 
   /**
    * Check if a specific column is being dragged
    */
   const isColumnDragging = (columnId: KanbanId) => {
-    return dragState.value.dragType === 'column' && 
-           dragState.value.draggedId === columnId;
+    return dragState.value.dragType === 'column' &&
+      dragState.value.draggedId === columnId;
   };
 
   return {
@@ -327,7 +349,7 @@ export function useKanbanDrag(options: UseKanbanDragOptions = {}) {
     dragState,
     isDragEnabled,
     isColumnDragEnabled,
-    
+
     // Handlers
     startCardDrag,
     startColumnDrag,
@@ -335,7 +357,7 @@ export function useKanbanDrag(options: UseKanbanDragOptions = {}) {
     handleDragLeave,
     handleDrop,
     handleDragEnd,
-    
+
     // Utilities
     isCardDragging,
     isColumnDragging,

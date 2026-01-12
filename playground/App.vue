@@ -236,12 +236,12 @@ const toggleDragDrop = () => {
   <div class="playground">
     <!-- Header -->
     <div class="playground-header">
-      <h1>🎯 Kanban Board Playground</h1>
+      <h1>Kanban Board Playground</h1>
       <p>Interactive demo of the Vue 3 Kanban component with PrimeVue</p>
     </div>
 
     <!-- Controls -->
-    <div class="playground-controls">
+    <!-- <div class="playground-controls">
       <div class="control-group">
         <label>
           <input v-model="options.enableDragDrop" type="checkbox" />
@@ -263,7 +263,7 @@ const toggleDragDrop = () => {
           Loading State
         </label>
       </div>
-    </div>
+    </div> -->
 
     <!-- Kanban Board -->
     <div class="playground-board">

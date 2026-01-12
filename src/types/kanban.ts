@@ -50,7 +50,7 @@ export interface KanbanCard {
   title: string;
   description?: string;
   order: number;
-  
+
   // Optional metadata
   tags?: KanbanTag[];
   assignees?: KanbanUser[];
@@ -58,13 +58,13 @@ export interface KanbanCard {
   dueDate?: Date | string;
   createdAt?: Date | string;
   updatedAt?: Date | string;
-  
+
   // Swimlane support
   swimlaneId?: KanbanId;
-  
+
   // Drag control
   draggable?: boolean;
-  
+
   // Custom fields (extensible)
   metadata?: Record<string, any>;
 }
@@ -76,20 +76,20 @@ export interface KanbanColumn {
   id: KanbanId;
   title: string;
   order: number;
-  
+
   // Visual customization
   color?: string;
   icon?: string;
-  
+
   // Column behavior
   collapsed?: boolean;
   hidden?: boolean;
   wipLimit?: number; // Work-in-progress limit
-  
+
   // Drag control
   draggable?: boolean;
   acceptsCards?: boolean; // Can cards be dropped here?
-  
+
   // Custom fields
   metadata?: Record<string, any>;
 }
@@ -114,26 +114,26 @@ export interface KanbanBoardOptions {
   enableDragDrop?: boolean;
   enableColumnDrag?: boolean;
   enableCardReordering?: boolean;
-  
+
   // Swimlanes
   enableSwimlanes?: boolean;
   groupBy?: string; // Field name to group by (e.g., 'swimlaneId')
-  
+
   // UI behavior
   horizontalScroll?: boolean;
   virtualScrolling?: boolean;
   showEmptyColumns?: boolean;
   showCardCount?: boolean;
   showWipLimit?: boolean;
-  
+
   // Accessibility
   enableKeyboardNavigation?: boolean;
-  
+
   // Card display
   cardMinHeight?: number;
   cardMaxHeight?: number;
   columnWidth?: number | string;
-  
+
   // Custom CSS classes
   boardClass?: string;
   columnClass?: string;
@@ -268,14 +268,14 @@ export interface KanbanBoardEmits {
   'update:columns': [columns: KanbanColumn[]];
   'update:cards': [cards: KanbanCard[]];
   'update:swimlanes': [swimlanes: KanbanSwimlane[]];
-  
+
   'card-moved': [event: CardMoveEvent];
   'column-moved': [event: ColumnMoveEvent];
   'card-click': [event: CardClickEvent];
   'card-update': [event: CardUpdateEvent];
   'column-update': [event: ColumnUpdateEvent];
   'board-change': [event: BoardChangeEvent];
-  
+
   'drag-start': [event: DragStartEvent];
   'drag-end': [event: DragEndEvent];
 }
@@ -291,4 +291,5 @@ export interface DragState {
   sourceSwimlaneId: KanbanId | null;
   dropColumnId: KanbanId | null;
   dropSwimlaneId: KanbanId | null;
+  dropIndex?: number; // Calculated drop position
 }
