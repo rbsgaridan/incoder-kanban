@@ -1,24 +1,37 @@
 # Quick Reference
 
+## 📦 Version
+
+Current version: **2.0.0**
+
+- Vue 3.5+
+- PrimeVue 4
+- Laravel compatible
+
 ## 🚀 Getting Started
 
 ### Install Dependencies
+
 ```bash
 npm install
 ```
 
 ### Run Playground (Development)
+
 ```bash
 npm run dev
 ```
+
 Then open http://localhost:5173
 
 ### Build Library
+
 ```bash
 npm run build
 ```
 
 ### Type Check
+
 ```bash
 npm run type-check
 ```
@@ -37,42 +50,43 @@ dist/
 
 ```typescript
 // Import component
-import { KanbanBoard } from '@incoder/kanban';
-import '@incoder/kanban/style.css';
+import { KanbanBoard } from "@incoder/kanban";
+import "@incoder/kanban/style.css";
 
 // Import types
-import type { KanbanColumn, KanbanCard } from '@incoder/kanban';
+import type { KanbanColumn, KanbanCard } from "@incoder/kanban";
 
 // Import composables (advanced)
-import { useKanbanState, useKanbanDrag } from '@incoder/kanban';
+import { useKanbanState, useKanbanDrag } from "@incoder/kanban";
 
 // Import enum
-import { CardPriority } from '@incoder/kanban';
+import { CardPriority } from "@incoder/kanban";
 ```
 
 ## 🔧 Key Commands
 
-| Command | Description |
-|---------|-------------|
-| `npm install` | Install dependencies |
-| `npm run dev` | Start development server |
-| `npm run build` | Build library for production |
-| `npm run preview` | Preview production build |
-| `npm run type-check` | Type check TypeScript |
+| Command              | Description                  |
+| -------------------- | ---------------------------- |
+| `npm install`        | Install dependencies         |
+| `npm run dev`        | Start development server     |
+| `npm run build`      | Build library for production |
+| `npm run preview`    | Preview production build     |
+| `npm run type-check` | Type check TypeScript        |
 
 ## 📁 Important Files
 
-| File | Purpose |
-|------|---------|
-| `src/index.ts` | Main library entry point |
-| `src/components/KanbanBoard.vue` | Main board component |
-| `src/types/kanban.ts` | TypeScript definitions |
-| `vite.config.ts` | Build configuration |
-| `package.json` | Package metadata |
+| File                             | Purpose                  |
+| -------------------------------- | ------------------------ |
+| `src/index.ts`                   | Main library entry point |
+| `src/components/KanbanBoard.vue` | Main board component     |
+| `src/types/kanban.ts`            | TypeScript definitions   |
+| `vite.config.ts`                 | Build configuration      |
+| `package.json`                   | Package metadata         |
 
 ## 🎨 Customization Points
 
 ### Slots
+
 - `toolbar` - Board toolbar
 - `column-header` - Column header
 - `column-footer` - Column footer
@@ -81,6 +95,7 @@ import { CardPriority } from '@incoder/kanban';
 - `empty-column` - Empty state
 
 ### Events
+
 - `card-moved` - Card moved
 - `card-click` - Card clicked
 - `drag-start` - Drag started
@@ -88,6 +103,7 @@ import { CardPriority } from '@incoder/kanban';
 - `board-change` - Board changed
 
 ### Props
+
 - `columns` - Column definitions
 - `cards` - Card data
 - `swimlanes` - Swimlane definitions
@@ -105,19 +121,25 @@ import { CardPriority } from '@incoder/kanban';
 ## 🐛 Common Issues
 
 ### Issue: Styles not appearing
+
 **Solution**: Import the CSS file
+
 ```typescript
-import '@incoder/kanban/style.css';
+import "@incoder/kanban/style.css";
 ```
 
 ### Issue: TypeScript errors
+
 **Solution**: Import types
+
 ```typescript
-import type { KanbanColumn, KanbanCard } from '@incoder/kanban';
+import type { KanbanColumn, KanbanCard } from "@incoder/kanban";
 ```
 
 ### Issue: Drag not working
+
 **Solution**: Enable drag & drop
+
 ```vue
 <KanbanBoard :options="{ enableDragDrop: true }" />
 ```
@@ -125,6 +147,7 @@ import type { KanbanColumn, KanbanCard } from '@incoder/kanban';
 ## 📊 Component API Quick Reference
 
 ### KanbanColumn Type
+
 ```typescript
 {
   id: string | number;
@@ -138,6 +161,7 @@ import type { KanbanColumn, KanbanCard } from '@incoder/kanban';
 ```
 
 ### KanbanCard Type
+
 ```typescript
 {
   id: string | number;
@@ -153,6 +177,7 @@ import type { KanbanColumn, KanbanCard } from '@incoder/kanban';
 ```
 
 ### KanbanBoardOptions Type
+
 ```typescript
 {
   enableDragDrop?: boolean;
@@ -168,25 +193,20 @@ import type { KanbanColumn, KanbanCard } from '@incoder/kanban';
 
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue';
-import { KanbanBoard } from '@incoder/kanban';
-import '@incoder/kanban/style.css';
+import { ref } from "vue";
+import { KanbanBoard } from "@incoder/kanban";
+import "@incoder/kanban/style.css";
 
 const columns = ref([
-  { id: 1, title: 'To Do', order: 0 },
-  { id: 2, title: 'Done', order: 1 }
+  { id: 1, title: "To Do", order: 0 },
+  { id: 2, title: "Done", order: 1 },
 ]);
 
-const cards = ref([
-  { id: 1, columnId: 1, title: 'My Task', order: 0 }
-]);
+const cards = ref([{ id: 1, columnId: 1, title: "My Task", order: 0 }]);
 </script>
 
 <template>
-  <KanbanBoard
-    v-model:columns="columns"
-    v-model:cards="cards"
-  />
+  <KanbanBoard v-model:columns="columns" v-model:cards="cards" />
 </template>
 ```
 

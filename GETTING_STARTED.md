@@ -8,23 +8,55 @@
 npm install @incoder/kanban vue primevue
 ```
 
-### Step 2: Setup PrimeVue (if not already done)
+### Step 2: Setup PrimeVue 4 (if not already done)
+
+#### Standard Vue 3 App
 
 In your `main.ts` or `main.js`:
 
 ```typescript
-import { createApp } from 'vue';
-import PrimeVue from 'primevue/config';
-import App from './App.vue';
-
-// Import PrimeVue theme
-import 'primevue/resources/themes/lara-light-blue/theme.css';
-import 'primevue/resources/primevue.min.css';
-import 'primeicons/primeicons.css';
+import { createApp } from "vue";
+import PrimeVue from "primevue/config";
+import Aura from "@primevue/themes/aura";
+import App from "./App.vue";
+import "primeicons/primeicons.css";
 
 const app = createApp(App);
-app.use(PrimeVue);
-app.mount('#app');
+app.use(PrimeVue, {
+  theme: {
+    preset: Aura,
+  },
+});
+app.mount("#app");
+```
+
+#### Laravel + Inertia.js Setup
+
+In your `resources/js/app.js` or `resources/js/app.ts`:
+
+```typescript
+import { createApp, h } from "vue";
+import { createInertiaApp } from "@inertiajs/vue3";
+import PrimeVue from "primevue/config";
+import Aura from "@primevue/themes/aura";
+import "primeicons/primeicons.css";
+
+createInertiaApp({
+  resolve: (name) => {
+    const pages = import.meta.glob("./Pages/**/*.vue", { eager: true });
+    return pages[`./Pages/${name}.vue`];
+  },
+  setup({ el, App, props, plugin }) {
+    createApp({ render: () => h(App, props) })
+      .use(plugin)
+      .use(PrimeVue, {
+        theme: {
+          preset: Aura,
+        },
+      })
+      .mount(el);
+  },
+});
 ```
 
 ### Step 3: Import Kanban Component
@@ -33,16 +65,16 @@ In your component:
 
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue';
-import { KanbanBoard } from '@incoder/kanban';
-import '@incoder/kanban/style.css';
-import type { KanbanColumn, KanbanCard } from '@incoder/kanban';
+import { ref } from "vue";
+import { KanbanBoard } from "@incoder/kanban";
+import "@incoder/kanban/style.css";
+import type { KanbanColumn, KanbanCard } from "@incoder/kanban";
 
 // Define your columns
 const columns = ref<KanbanColumn[]>([
-  { id: 1, title: 'To Do', order: 0 },
-  { id: 2, title: 'In Progress', order: 1 },
-  { id: 3, title: 'Done', order: 2 }
+  { id: 1, title: "To Do", order: 0 },
+  { id: 2, title: "In Progress", order: 1 },
+  { id: 3, title: "Done", order: 2 },
 ]);
 
 // Define your cards
@@ -50,19 +82,16 @@ const cards = ref<KanbanCard[]>([
   {
     id: 1,
     columnId: 1,
-    title: 'First task',
-    description: 'This is my first task',
-    order: 0
-  }
+    title: "First task",
+    description: "This is my first task",
+    order: 0,
+  },
 ]);
 </script>
 
 <template>
   <div class="kanban-container">
-    <KanbanBoard
-      v-model:columns="columns"
-      v-model:cards="cards"
-    />
+    <KanbanBoard v-model:columns="columns" v-model:cards="cards" />
   </div>
 </template>
 
@@ -80,28 +109,34 @@ const cards = ref<KanbanCard[]>([
 
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue';
-import { KanbanBoard, CardPriority } from '@incoder/kanban';
+import { ref } from "vue";
+import { KanbanBoard, CardPriority } from "@incoder/kanban";
 
 const columns = ref([
-  { id: 'backlog', title: 'Backlog', order: 0, icon: 'pi pi-inbox' },
-  { id: 'todo', title: 'To Do', order: 1, icon: 'pi pi-list' },
-  { id: 'doing', title: 'In Progress', order: 2, icon: 'pi pi-spin pi-spinner', wipLimit: 3 },
-  { id: 'review', title: 'Review', order: 3, icon: 'pi pi-eye' },
-  { id: 'done', title: 'Done', order: 4, icon: 'pi pi-check' }
+  { id: "backlog", title: "Backlog", order: 0, icon: "pi pi-inbox" },
+  { id: "todo", title: "To Do", order: 1, icon: "pi pi-list" },
+  {
+    id: "doing",
+    title: "In Progress",
+    order: 2,
+    icon: "pi pi-spin pi-spinner",
+    wipLimit: 3,
+  },
+  { id: "review", title: "Review", order: 3, icon: "pi pi-eye" },
+  { id: "done", title: "Done", order: 4, icon: "pi pi-check" },
 ]);
 
 const cards = ref([
   {
     id: 1,
-    columnId: 'doing',
-    title: 'Implement feature X',
+    columnId: "doing",
+    title: "Implement feature X",
     priority: CardPriority.HIGH,
-    assignees: [{ id: 1, name: 'John Doe' }],
-    tags: [{ id: 1, label: 'Frontend', color: '#3b82f6' }],
-    dueDate: '2024-01-20',
-    order: 0
-  }
+    assignees: [{ id: 1, name: "John Doe" }],
+    tags: [{ id: 1, label: "Frontend", color: "#3b82f6" }],
+    dueDate: "2024-01-20",
+    order: 0,
+  },
 ]);
 </script>
 
@@ -120,19 +155,19 @@ const cards = ref([
 ```vue
 <script setup lang="ts">
 const columns = ref([
-  { id: 1, title: 'To Do', order: 0 },
-  { id: 2, title: 'Done', order: 1 }
+  { id: 1, title: "To Do", order: 0 },
+  { id: 2, title: "Done", order: 1 },
 ]);
 
 const cards = ref([
-  { id: 1, columnId: 1, title: 'Buy groceries', order: 0 },
-  { id: 2, columnId: 1, title: 'Call dentist', order: 1 },
-  { id: 3, columnId: 2, title: 'Pay bills', order: 0 }
+  { id: 1, columnId: 1, title: "Buy groceries", order: 0 },
+  { id: 2, columnId: 1, title: "Call dentist", order: 1 },
+  { id: 3, columnId: 2, title: "Pay bills", order: 0 },
 ]);
 
 const options = ref({
   showWipLimit: false,
-  columnWidth: '250px'
+  columnWidth: "250px",
 });
 </script>
 
@@ -150,36 +185,36 @@ const options = ref({
 ```vue
 <script setup lang="ts">
 const swimlanes = ref([
-  { id: 'frontend', title: 'Frontend Team', order: 0 },
-  { id: 'backend', title: 'Backend Team', order: 1 },
-  { id: 'devops', title: 'DevOps Team', order: 2 }
+  { id: "frontend", title: "Frontend Team", order: 0 },
+  { id: "backend", title: "Backend Team", order: 1 },
+  { id: "devops", title: "DevOps Team", order: 2 },
 ]);
 
 const columns = ref([
-  { id: 'todo', title: 'To Do', order: 0 },
-  { id: 'doing', title: 'In Progress', order: 1 },
-  { id: 'done', title: 'Done', order: 2 }
+  { id: "todo", title: "To Do", order: 0 },
+  { id: "doing", title: "In Progress", order: 1 },
+  { id: "done", title: "Done", order: 2 },
 ]);
 
 const cards = ref([
   {
     id: 1,
-    columnId: 'todo',
-    swimlaneId: 'frontend',
-    title: 'Update UI components',
-    order: 0
+    columnId: "todo",
+    swimlaneId: "frontend",
+    title: "Update UI components",
+    order: 0,
   },
   {
     id: 2,
-    columnId: 'doing',
-    swimlaneId: 'backend',
-    title: 'API optimization',
-    order: 0
-  }
+    columnId: "doing",
+    swimlaneId: "backend",
+    title: "API optimization",
+    order: 0,
+  },
 ]);
 
 const options = ref({
-  enableSwimlanes: true
+  enableSwimlanes: true,
 });
 </script>
 
@@ -199,7 +234,7 @@ const options = ref({
 
 ```vue
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted } from "vue";
 
 const loading = ref(true);
 const columns = ref([]);
@@ -208,14 +243,14 @@ const cards = ref([]);
 onMounted(async () => {
   try {
     const [columnsRes, cardsRes] = await Promise.all([
-      fetch('/api/kanban/columns'),
-      fetch('/api/kanban/cards')
+      fetch("/api/kanban/columns"),
+      fetch("/api/kanban/cards"),
     ]);
-    
+
     columns.value = await columnsRes.json();
     cards.value = await cardsRes.json();
   } catch (error) {
-    console.error('Failed to load kanban data:', error);
+    console.error("Failed to load kanban data:", error);
   } finally {
     loading.value = false;
   }
@@ -235,20 +270,20 @@ onMounted(async () => {
 
 ```vue
 <script setup lang="ts">
-import type { CardMoveEvent } from '@incoder/kanban';
+import type { CardMoveEvent } from "@incoder/kanban";
 
 const handleCardMoved = async (event: CardMoveEvent) => {
   try {
     await fetch(`/api/cards/${event.card.id}`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         columnId: event.toColumnId,
-        order: event.toIndex
-      })
+        order: event.toIndex,
+      }),
     });
   } catch (error) {
-    console.error('Failed to move card:', error);
+    console.error("Failed to move card:", error);
     // Optionally revert the change
   }
 };
@@ -271,13 +306,13 @@ The component automatically inherits your PrimeVue theme:
 
 ```typescript
 // For dark theme
-import 'primevue/resources/themes/lara-dark-blue/theme.css';
+import "primevue/resources/themes/lara-dark-blue/theme.css";
 
 // For light theme
-import 'primevue/resources/themes/lara-light-blue/theme.css';
+import "primevue/resources/themes/lara-light-blue/theme.css";
 
 // For custom theme
-import 'primevue/resources/themes/my-custom-theme/theme.css';
+import "primevue/resources/themes/my-custom-theme/theme.css";
 ```
 
 ### Custom Styling
@@ -316,9 +351,9 @@ Make sure drag & drop is enabled:
 Ensure you've imported PrimeVue CSS:
 
 ```typescript
-import 'primevue/resources/themes/lara-light-blue/theme.css';
-import 'primevue/resources/primevue.min.css';
-import 'primeicons/primeicons.css';
+import "primevue/resources/themes/lara-light-blue/theme.css";
+import "primevue/resources/primevue.min.css";
+import "primeicons/primeicons.css";
 ```
 
 ### TypeScript errors
@@ -326,7 +361,7 @@ import 'primeicons/primeicons.css';
 Make sure you're importing types:
 
 ```typescript
-import type { KanbanColumn, KanbanCard } from '@incoder/kanban';
+import type { KanbanColumn, KanbanCard } from "@incoder/kanban";
 ```
 
 ## Next Steps
