@@ -241,7 +241,7 @@ const toggleDragDrop = () => {
     </div>
 
     <!-- Controls -->
-    <!-- <div class="playground-controls">
+    <div class="playground-controls">
       <div class="control-group">
         <label>
           <input v-model="options.enableDragDrop" type="checkbox" />
@@ -263,7 +263,7 @@ const toggleDragDrop = () => {
           Loading State
         </label>
       </div>
-    </div> -->
+    </div>
 
     <!-- Kanban Board -->
     <div class="playground-board">
