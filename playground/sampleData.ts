@@ -1,0 +1,147 @@
+import type { KanbanColumn, KanbanCard } from "../src/types/kanban";
+import { CardPriority as Priority } from "../src/types/kanban";
+
+export const sampleColumns: KanbanColumn[] = [
+    {
+        id: "backlog",
+        title: "Backlog",
+        order: 0,
+        icon: "pi pi-inbox",
+        color: "#64748b",
+        wipLimit: 10,
+    },
+    {
+        id: "todo",
+        title: "To Do",
+        order: 1,
+        icon: "pi pi-list",
+        color: "#3b82f6",
+    },
+    {
+        id: "in-progress",
+        title: "In Progress",
+        order: 2,
+        icon: "pi pi-spin pi-spinner",
+        color: "#f59e0b",
+        wipLimit: 3,
+    },
+    {
+        id: "review",
+        title: "Review",
+        order: 3,
+        icon: "pi pi-eye",
+        color: "#8b5cf6",
+        wipLimit: 5,
+    },
+    {
+        id: "done",
+        title: "Done",
+        order: 4,
+        icon: "pi pi-check",
+        color: "#10b981",
+    },
+];
+
+export const sampleCards: KanbanCard[] = [
+    {
+        id: 1,
+        columnId: "backlog",
+        title: "Implement user authentication",
+        description: "Add JWT-based authentication system with refresh tokens",
+        order: 0,
+        priority: Priority.HIGH,
+        tags: [
+            { id: 1, label: "Backend", color: "#3b82f6" },
+            { id: 2, label: "Security", color: "#ef4444" },
+        ],
+        assignees: [{ id: 1, name: "John Doe", avatar: "" }],
+        dueDate: "2024-01-15",
+    },
+    {
+        id: 2,
+        columnId: "backlog",
+        title: "Design dashboard mockups",
+        description: "Create high-fidelity mockups for the analytics dashboard",
+        order: 1,
+        priority: Priority.MEDIUM,
+        tags: [{ id: 3, label: "Design", color: "#8b5cf6" }],
+        assignees: [{ id: 2, name: "Jane Smith", avatar: "" }],
+    },
+    {
+        id: 3,
+        columnId: "todo",
+        title: "Setup CI/CD pipeline",
+        description:
+            "Configure GitHub Actions for automated testing and deployment",
+        order: 0,
+        priority: Priority.HIGH,
+        tags: [{ id: 4, label: "DevOps", color: "#f59e0b" }],
+    },
+    {
+        id: 4,
+        columnId: "todo",
+        title: "Write API documentation",
+        description: "Document all REST endpoints using OpenAPI specification",
+        order: 1,
+        priority: Priority.LOW,
+        tags: [{ id: 5, label: "Documentation", color: "#06b6d4" }],
+    },
+    {
+        id: 5,
+        columnId: "in-progress",
+        title: "Implement real-time notifications",
+        description: "Add WebSocket support for push notifications",
+        order: 0,
+        priority: Priority.HIGHEST,
+        tags: [
+            { id: 6, label: "Frontend", color: "#10b981" },
+            { id: 7, label: "Backend", color: "#3b82f6" },
+        ],
+        assignees: [
+            { id: 1, name: "John Doe", avatar: "" },
+            { id: 3, name: "Bob Johnson", avatar: "" },
+        ],
+        dueDate: "2024-01-10",
+    },
+    {
+        id: 6,
+        columnId: "in-progress",
+        title: "Optimize database queries",
+        description:
+            "Add indexes and optimize slow queries identified in monitoring",
+        order: 1,
+        priority: Priority.MEDIUM,
+        tags: [
+            { id: 2, label: "Backend", color: "#3b82f6" },
+            { id: 8, label: "Performance", color: "#f59e0b" },
+        ],
+        assignees: [{ id: 4, name: "Alice Brown", avatar: "" }],
+    },
+    {
+        id: 7,
+        columnId: "review",
+        title: "User profile page",
+        description: "New user profile page with edit capabilities",
+        order: 0,
+        priority: Priority.MEDIUM,
+        tags: [{ id: 6, label: "Frontend", color: "#10b981" }],
+        assignees: [{ id: 2, name: "Jane Smith", avatar: "" }],
+    },
+    {
+        id: 8,
+        columnId: "done",
+        title: "Project setup",
+        description: "Initialize project with Vue 3, TypeScript, and Vite",
+        order: 0,
+        priority: Priority.HIGH,
+        tags: [{ id: 9, label: "Setup", color: "#64748b" }],
+    },
+    {
+        id: 9,
+        columnId: "done",
+        title: "Install dependencies",
+        description: "Install and configure PrimeVue and other core dependencies",
+        order: 1,
+        tags: [{ id: 9, label: "Setup", color: "#64748b" }],
+    },
+];
