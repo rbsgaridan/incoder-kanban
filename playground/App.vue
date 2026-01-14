@@ -5,164 +5,25 @@
  * Interactive demo of the Kanban Board component
  */
 
-import { ref, computed } from "vue";
+import { ref } from "vue";
 import KanbanBoard from "../src/components/KanbanBoard.vue";
+import Checkbox from "primevue/checkbox";
+import Button from "primevue/button";
+import Popover from "primevue/popover";
+import { sampleColumns, sampleCards } from "./sampleData";
 import type {
   KanbanColumn,
   KanbanCard,
   KanbanBoardOptions,
   CardMoveEvent,
   CardClickEvent,
-  CardPriority,
 } from "../src/types/kanban";
-import { CardPriority as Priority } from "../src/types/kanban";
 
 // Sample columns
-const columns = ref<KanbanColumn[]>([
-  {
-    id: "backlog",
-    title: "Backlog",
-    order: 0,
-    icon: "pi pi-inbox",
-    color: "#64748b",
-    wipLimit: 10,
-  },
-  {
-    id: "todo",
-    title: "To Do",
-    order: 1,
-    icon: "pi pi-list",
-    color: "#3b82f6",
-  },
-  {
-    id: "in-progress",
-    title: "In Progress",
-    order: 2,
-    icon: "pi pi-spin pi-spinner",
-    color: "#f59e0b",
-    wipLimit: 3,
-  },
-  {
-    id: "review",
-    title: "Review",
-    order: 3,
-    icon: "pi pi-eye",
-    color: "#8b5cf6",
-    wipLimit: 5,
-  },
-  {
-    id: "done",
-    title: "Done",
-    order: 4,
-    icon: "pi pi-check",
-    color: "#10b981",
-  },
-]);
+const columns = ref<KanbanColumn[]>(sampleColumns);
 
 // Sample cards
-const cards = ref<KanbanCard[]>([
-  {
-    id: 1,
-    columnId: "backlog",
-    title: "Implement user authentication",
-    description: "Add JWT-based authentication system with refresh tokens",
-    order: 0,
-    priority: Priority.HIGH,
-    tags: [
-      { id: 1, label: "Backend", color: "#3b82f6" },
-      { id: 2, label: "Security", color: "#ef4444" },
-    ],
-    assignees: [{ id: 1, name: "John Doe", avatar: "" }],
-    dueDate: "2024-01-15",
-  },
-  {
-    id: 2,
-    columnId: "backlog",
-    title: "Design dashboard mockups",
-    description: "Create high-fidelity mockups for the analytics dashboard",
-    order: 1,
-    priority: Priority.MEDIUM,
-    tags: [{ id: 3, label: "Design", color: "#8b5cf6" }],
-    assignees: [{ id: 2, name: "Jane Smith", avatar: "" }],
-  },
-  {
-    id: 3,
-    columnId: "todo",
-    title: "Setup CI/CD pipeline",
-    description:
-      "Configure GitHub Actions for automated testing and deployment",
-    order: 0,
-    priority: Priority.HIGH,
-    tags: [{ id: 4, label: "DevOps", color: "#f59e0b" }],
-  },
-  {
-    id: 4,
-    columnId: "todo",
-    title: "Write API documentation",
-    description: "Document all REST endpoints using OpenAPI specification",
-    order: 1,
-    priority: Priority.LOW,
-    tags: [{ id: 5, label: "Documentation", color: "#06b6d4" }],
-  },
-  {
-    id: 5,
-    columnId: "in-progress",
-    title: "Implement real-time notifications",
-    description: "Add WebSocket support for push notifications",
-    order: 0,
-    priority: Priority.HIGHEST,
-    tags: [
-      { id: 6, label: "Frontend", color: "#10b981" },
-      { id: 7, label: "Backend", color: "#3b82f6" },
-    ],
-    assignees: [
-      { id: 1, name: "John Doe", avatar: "" },
-      { id: 3, name: "Bob Johnson", avatar: "" },
-    ],
-    dueDate: "2024-01-10",
-  },
-  {
-    id: 6,
-    columnId: "in-progress",
-    title: "Optimize database queries",
-    description:
-      "Add indexes and optimize slow queries identified in monitoring",
-    order: 1,
-    priority: Priority.MEDIUM,
-    tags: [
-      { id: 2, label: "Backend", color: "#3b82f6" },
-      { id: 8, label: "Performance", color: "#f59e0b" },
-    ],
-    assignees: [{ id: 4, name: "Alice Brown", avatar: "" }],
-  },
-  {
-    id: 7,
-    columnId: "review",
-    title: "User profile page",
-    description: "New user profile page with edit capabilities",
-    order: 0,
-    priority: Priority.MEDIUM,
-    tags: [{ id: 6, label: "Frontend", color: "#10b981" }],
-    assignees: [{ id: 2, name: "Jane Smith", avatar: "" }],
-  },
-  {
-    id: 8,
-    columnId: "done",
-    title: "Project setup",
-    description: "Initialize project with Vue 3, TypeScript, and Vite",
-    order: 0,
-    priority: Priority.HIGH,
-    tags: [{ id: 9, label: "Setup", color: "#64748b" }],
-  },
-  {
-    id: 9,
-    columnId: "done",
-    title: "Install dependencies",
-    description: "Install and configure PrimeVue and other core dependencies",
-    order: 1,
-    tags: [{ id: 9, label: "Setup", color: "#64748b" }],
-  },
-]);
+const cards = ref<KanbanCard[]>(sampleCards);
 
 // Board options
 const options = ref<KanbanBoardOptions>({
@@ -176,6 +37,9 @@ const options = ref<KanbanBoardOptions>({
 
 // Loading state
 const loading = ref(false);
+
+// Settings overlay panel ref
+const settingsPanel = ref();
 
 // Event log
 const eventLog = ref<string[]>([]);
@@ -225,6 +89,13 @@ const clearLog = () => {
 };
 
 /**
+ * Toggle settings panel
+ */
+const toggleSettings = (event: Event) => {
+  settingsPanel.value.toggle(event);
+};
+
+/**
  * Toggle drag & drop
  */
 const toggleDragDrop = () => {
@@ -238,31 +109,6 @@ const toggleDragDrop = () => {
     <div class="playground-header">
       <h1>Kanban Board Playground</h1>
       <p>Interactive demo of the Vue 3 Kanban component with PrimeVue</p>
-    </div>
-
-    <!-- Controls -->
-    <div class="playground-controls">
-      <div class="control-group">
-        <label>
-          <input v-model="options.enableDragDrop" type="checkbox" />
-          Enable Drag & Drop
-        </label>
-
-        <label>
-          <input v-model="options.showCardCount" type="checkbox" />
-          Show Card Count
-        </label>
-
-        <label>
-          <input v-model="options.showWipLimit" type="checkbox" />
-          Show WIP Limits
-        </label>
-
-        <label>
-          <input v-model="loading" type="checkbox" />
-          Loading State
-        </label>
-      </div>
     </div>
 
     <!-- Kanban Board -->
@@ -282,9 +128,65 @@ const toggleDragDrop = () => {
               <strong>{{ cols.length }}</strong> columns ·
               <strong>{{ cds.length }}</strong> cards
             </div>
-            <button @click="clearLog" class="clear-button">
-              Clear Event Log
-            </button>
+            <Button
+              @click="toggleSettings"
+              icon="pi pi-cog"
+              label="Settings"
+              size="small"
+              outlined
+            />
+            <Popover ref="settingsPanel">
+              <div class="settings-panel">
+                <h4>Board Settings</h4>
+                <div class="settings-options">
+                  <div class="flex items-center gap-2 mb-3">
+                    <Checkbox
+                      v-model="options.enableDragDrop"
+                      inputId="dragDrop"
+                      :binary="true"
+                    />
+                    <label for="dragDrop">Enable Drag & Drop</label>
+                  </div>
+
+                  <div class="flex items-center gap-2 mb-3">
+                    <Checkbox
+                      v-model="options.showCardCount"
+                      inputId="cardCount"
+                      :binary="true"
+                    />
+                    <label for="cardCount">Show Card Count</label>
+                  </div>
+
+                  <div class="flex items-center gap-2 mb-3">
+                    <Checkbox
+                      v-model="options.showWipLimit"
+                      inputId="wipLimit"
+                      :binary="true"
+                    />
+                    <label for="wipLimit">Show WIP Limits</label>
+                  </div>
+
+                  <div class="flex items-center gap-2 mb-3">
+                    <Checkbox
+                      v-model="loading"
+                      inputId="loading"
+                      :binary="true"
+                    />
+                    <label for="loading">Loading State</label>
+                  </div>
+                </div>
+
+                <div class="settings-divider"></div>
+
+                <Button
+                  @click="clearLog"
+                  label="Clear Event Log"
+                  size="small"
+                  severity="secondary"
+                  class="w-full"
+                />
+              </div>
+            </Popover>
           </div>
         </template>
       </KanbanBoard>
