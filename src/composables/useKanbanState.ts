@@ -40,8 +40,8 @@ export function useKanbanState(props: UseKanbanStateOptions) {
     return currentCards.value
       .filter(card => {
         const columnMatch = card.columnId === columnId;
-        const swimlaneMatch = swimlaneId !== undefined 
-          ? card.swimlaneId === swimlaneId 
+        const swimlaneMatch = swimlaneId !== undefined
+          ? card.swimlaneId === swimlaneId
           : true;
         return columnMatch && swimlaneMatch;
       })
@@ -61,7 +61,7 @@ export function useKanbanState(props: UseKanbanStateOptions) {
   const isColumnOverLimit = (columnId: string | number) => {
     const column = currentColumns.value.find(c => c.id === columnId);
     if (!column || !column.wipLimit) return false;
-    
+
     const cardCount = getCardCount(columnId);
     return cardCount > column.wipLimit;
   };
@@ -93,50 +93,60 @@ export function useKanbanState(props: UseKanbanStateOptions) {
   const moveCard = (event: CardMoveEvent): KanbanCard[] => {
     const cards = [...currentCards.value];
     const cardIndex = cards.findIndex(c => c.id === event.card.id);
-    
+
     if (cardIndex === -1) return cards;
 
-    // Update the card's column and swimlane
-    const updatedCard = {
-      ...cards[cardIndex],
-      columnId: event.toColumnId,
-      swimlaneId: event.toSwimlaneId,
-      order: event.toIndex
-    };
+    // Normalize swimlane IDs for comparison (treat undefined and null as equivalent)
+    const normalizeId = (id: any) => id ?? null;
+    const fromSwimlane = normalizeId(event.fromSwimlaneId);
+    const toSwimlane = normalizeId(event.toSwimlaneId);
 
-    // Remove from original position
-    cards.splice(cardIndex, 1);
+    const isSameLocation = event.fromColumnId === event.toColumnId &&
+      fromSwimlane === toSwimlane;
 
-    // Reorder cards in the source column
-    cards
-      .filter(c => c.columnId === event.fromColumnId && 
-                   c.swimlaneId === event.fromSwimlaneId)
-      .forEach((card, idx) => {
-        card.order = idx;
-      });
+    // Remove the card from its current position
+    const [movedCard] = cards.splice(cardIndex, 1);
 
-    // Insert at new position
-    const targetCards = cards.filter(c => 
-      c.columnId === event.toColumnId && 
-      c.swimlaneId === event.toSwimlaneId
-    );
-    
-    targetCards.splice(event.toIndex, 0, updatedCard);
-    
-    // Reorder cards in target column
-    targetCards.forEach((card, idx) => {
+    // Update the card's properties
+    movedCard.columnId = event.toColumnId;
+    movedCard.swimlaneId = event.toSwimlaneId;
+
+    // Separate cards by their location
+    const targetColumnCards: KanbanCard[] = [];
+    const sourceColumnCards: KanbanCard[] = [];
+    const otherCards: KanbanCard[] = [];
+
+    cards.forEach(card => {
+      const cardSwimlane = normalizeId(card.swimlaneId);
+
+      if (card.columnId === event.toColumnId && cardSwimlane === toSwimlane) {
+        targetColumnCards.push(card);
+      } else if (!isSameLocation && card.columnId === event.fromColumnId && cardSwimlane === fromSwimlane) {
+        sourceColumnCards.push(card);
+      } else {
+        otherCards.push(card);
+      }
+    });
+
+    // Sort and insert the moved card into target column
+    targetColumnCards.sort((a, b) => a.order - b.order);
+    targetColumnCards.splice(event.toIndex, 0, movedCard);
+
+    // Update order for all cards in target column
+    targetColumnCards.forEach((card, idx) => {
       card.order = idx;
     });
 
-    // Rebuild the full cards array
-    const otherCards = cards.filter(c => 
-      !(c.columnId === event.toColumnId && c.swimlaneId === event.toSwimlaneId) &&
-      !(c.columnId === event.fromColumnId && c.swimlaneId === event.fromSwimlaneId)
-    );
+    // Update order for source column cards if different location
+    if (!isSameLocation) {
+      sourceColumnCards.sort((a, b) => a.order - b.order);
+      sourceColumnCards.forEach((card, idx) => {
+        card.order = idx;
+      });
+    }
 
-    return [...otherCards, ...targetCards, ...cards.filter(c => 
-      c.columnId === event.fromColumnId && c.swimlaneId === event.fromSwimlaneId
-    )];
+    // Combine all cards back together
+    return [...otherCards, ...targetColumnCards, ...sourceColumnCards];
   };
 
   /**
@@ -145,15 +155,15 @@ export function useKanbanState(props: UseKanbanStateOptions) {
   const moveColumn = (event: ColumnMoveEvent): KanbanColumn[] => {
     const columns = [...currentColumns.value];
     const columnIndex = columns.findIndex(c => c.id === event.column.id);
-    
+
     if (columnIndex === -1) return columns;
 
     // Remove from original position
     const [movedColumn] = columns.splice(columnIndex, 1);
-    
+
     // Insert at new position
     columns.splice(event.toIndex, 0, movedColumn);
-    
+
     // Update order for all columns
     return columns.map((col, idx) => ({
       ...col,
@@ -165,7 +175,7 @@ export function useKanbanState(props: UseKanbanStateOptions) {
    * Update a card
    */
   const updateCard = (cardId: string | number, changes: Partial<KanbanCard>): KanbanCard[] => {
-    return currentCards.value.map(card => 
+    return currentCards.value.map(card =>
       card.id === cardId ? { ...card, ...changes } : card
     );
   };
@@ -174,7 +184,7 @@ export function useKanbanState(props: UseKanbanStateOptions) {
    * Update a column
    */
   const updateColumn = (columnId: string | number, changes: Partial<KanbanColumn>): KanbanColumn[] => {
-    return currentColumns.value.map(column => 
+    return currentColumns.value.map(column =>
       column.id === columnId ? { ...column, ...changes } : column
     );
   };
@@ -221,12 +231,12 @@ export function useKanbanState(props: UseKanbanStateOptions) {
     currentColumns,
     currentCards,
     currentSwimlanes,
-    
+
     // Computed
     sortedColumns,
     sortedSwimlanes,
     effectiveSwimlanes,
-    
+
     // Getters
     getCardsForColumn,
     getCardCount,
@@ -234,7 +244,7 @@ export function useKanbanState(props: UseKanbanStateOptions) {
     getColumnById,
     getCardById,
     getSwimlaneById,
-    
+
     // Actions
     moveCard,
     moveColumn,

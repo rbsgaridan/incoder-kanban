@@ -1,16 +1,16 @@
 {
   "name": "@incoder/kanban",
-  "version": "1.0.0",
-  "description": "Enterprise-grade Kanban Board component for Vue 3 with PrimeVue integration",
+  "version": "2.0.0",
+  "description": "Enterprise-grade Kanban Board component for Vue 3 with PrimeVue 4 integration",
   "type": "module",
   "main": "./dist/incoder-kanban.cjs",
   "module": "./dist/incoder-kanban.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/incoder-kanban.js",
-      "require": "./dist/incoder-kanban.cjs",
-      "types": "./dist/index.d.ts"
+      "require": "./dist/incoder-kanban.cjs"
     },
     "./style.css": "./dist/style.css"
   },
@@ -29,28 +29,33 @@
     "kanban-board",
     "drag-and-drop",
     "primevue",
+    "primevue4",
+    "laravel",
+    "inertia",
     "component",
     "ui"
   ],
   "author": "",
   "license": "MIT",
   "peerDependencies": {
-    "vue": "^3.3.0",
-    "primevue": "^3.46.0"
+    "primevue": "^4.3.9",
+    "vue": "^3.5.0"
   },
   "devDependencies": {
-    "@types/node": "^20.10.5",
-    "@vitejs/plugin-vue": "^5.0.0",
-    "@vueuse/core": "^10.7.0",
-    "primeicons": "^6.0.1",
-    "primevue": "^3.46.0",
-    "typescript": "^5.6.0",
-    "vite": "^5.0.8",
-    "vite-plugin-dts": "^3.7.0",
-    "vue": "^3.3.13",
-    "vue-tsc": "^2.1.0"
+    "@primevue/themes": "^4.2.2",
+    "@types/node": "^22.10.0",
+    "@vitejs/plugin-vue": "^5.2.0",
+    "@vueuse/core": "^11.3.0",
+    "primeicons": "^7.0.0",
+    "primevue": "^4.2.2",
+    "typescript": "^5.7.0",
+    "vite": "^6.0.0",
+    "vite-plugin-dts": "^4.3.0",
+    "vue": "^3.5.13",
+    "vue-tsc": "^2.1.10"
   },
   "dependencies": {
-    "@vueuse/core": "^10.7.0"
+    "@primevue/themes": "^4.5.4",
+    "@vueuse/core": "^11.3.0"
   }
 }

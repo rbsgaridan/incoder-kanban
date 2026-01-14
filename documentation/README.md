@@ -1,6 +1,6 @@
 # @incoder/kanban
 
-> Enterprise-grade Kanban Board component for Vue 3 with PrimeVue integration
+> Enterprise-grade Kanban Board component for Vue 3 with PrimeVue 4 integration
 
 [![NPM Version](https://img.shields.io/npm/v/@incoder/kanban.svg)](https://www.npmjs.com/package/@incoder/kanban)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
@@ -8,7 +8,8 @@
 ## ✨ Features
 
 - 🎯 **Vue 3 Composition API** - Built with modern Vue 3 and TypeScript
-- 🎨 **PrimeVue Integration** - Inherits your app's PrimeVue theme automatically
+- 🎨 **PrimeVue 4 Integration** - Uses new preset-based theming system
+- 🚀 **Laravel Compatible** - Works seamlessly with Laravel + Inertia.js
 - 🔄 **Drag & Drop** - Smooth card and column reordering
 - 🏊 **Swimlanes Support** - Organize cards in horizontal swimlanes
 - 🎪 **Flexible Slots** - Customize every part of the board
@@ -33,46 +34,50 @@ This package requires the following peer dependencies:
 
 ```json
 {
-  "vue": "^3.3.0",
-  "primevue": "^3.46.0"
+  "vue": "^3.5.0",
+  "primevue": "^4.0.0"
 }
 ```
+
+**Note**: This library is fully compatible with Laravel + Inertia.js projects using Vue 3 and PrimeVue 4.
+
+> 📖 **Laravel Developers**: See [LARAVEL.md](./LARAVEL.md) for complete Laravel + Inertia.js integration guide with backend examples.
 
 ## 🚀 Quick Start
 
 ### 1. Import the Component and Styles
 
 ```typescript
-import { KanbanBoard } from '@incoder/kanban';
-import '@incoder/kanban/style.css';
-import type { KanbanColumn, KanbanCard } from '@incoder/kanban';
+import { KanbanBoard } from "@incoder/kanban";
+import "@incoder/kanban/style.css";
+import type { KanbanColumn, KanbanCard } from "@incoder/kanban";
 ```
 
 ### 2. Setup Your Data
 
 ```typescript
-import { ref } from 'vue';
+import { ref } from "vue";
 
 const columns = ref<KanbanColumn[]>([
-  { id: 'todo', title: 'To Do', order: 0 },
-  { id: 'doing', title: 'In Progress', order: 1 },
-  { id: 'done', title: 'Done', order: 2 }
+  { id: "todo", title: "To Do", order: 0 },
+  { id: "doing", title: "In Progress", order: 1 },
+  { id: "done", title: "Done", order: 2 },
 ]);
 
 const cards = ref<KanbanCard[]>([
   {
     id: 1,
-    columnId: 'todo',
-    title: 'Implement authentication',
-    description: 'Add JWT-based auth system',
-    order: 0
+    columnId: "todo",
+    title: "Implement authentication",
+    description: "Add JWT-based auth system",
+    order: 0,
   },
   {
     id: 2,
-    columnId: 'doing',
-    title: 'Design dashboard',
-    order: 0
-  }
+    columnId: "doing",
+    title: "Design dashboard",
+    order: 0,
+  },
 ]);
 ```
 
@@ -92,35 +97,35 @@ const cards = ref<KanbanCard[]>([
 
 ### KanbanBoard Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `columns` | `KanbanColumn[]` | **required** | Array of column definitions |
-| `cards` | `KanbanCard[]` | **required** | Array of card data |
-| `swimlanes` | `KanbanSwimlane[]` | `[]` | Optional swimlane definitions |
-| `options` | `KanbanBoardOptions` | `{}` | Board configuration options |
-| `loading` | `boolean` | `false` | Show loading overlay |
+| Prop        | Type                 | Default      | Description                   |
+| ----------- | -------------------- | ------------ | ----------------------------- |
+| `columns`   | `KanbanColumn[]`     | **required** | Array of column definitions   |
+| `cards`     | `KanbanCard[]`       | **required** | Array of card data            |
+| `swimlanes` | `KanbanSwimlane[]`   | `[]`         | Optional swimlane definitions |
+| `options`   | `KanbanBoardOptions` | `{}`         | Board configuration options   |
+| `loading`   | `boolean`            | `false`      | Show loading overlay          |
 
 ### KanbanBoardOptions
 
 ```typescript
 interface KanbanBoardOptions {
   // Drag & Drop
-  enableDragDrop?: boolean;           // Default: true
-  enableColumnDrag?: boolean;         // Default: false
-  enableCardReordering?: boolean;     // Default: true
-  
+  enableDragDrop?: boolean; // Default: true
+  enableColumnDrag?: boolean; // Default: false
+  enableCardReordering?: boolean; // Default: true
+
   // Swimlanes
-  enableSwimlanes?: boolean;          // Default: false
-  groupBy?: string;                   // Field to group by
-  
+  enableSwimlanes?: boolean; // Default: false
+  groupBy?: string; // Field to group by
+
   // UI Behavior
-  horizontalScroll?: boolean;         // Default: true
-  showEmptyColumns?: boolean;         // Default: true
-  showCardCount?: boolean;            // Default: true
-  showWipLimit?: boolean;             // Default: true
-  
+  horizontalScroll?: boolean; // Default: true
+  showEmptyColumns?: boolean; // Default: true
+  showCardCount?: boolean; // Default: true
+  showWipLimit?: boolean; // Default: true
+
   // Styling
-  columnWidth?: number | string;      // Default: '300px'
+  columnWidth?: number | string; // Default: '300px'
   boardClass?: string;
   columnClass?: string;
   cardClass?: string;
@@ -134,13 +139,13 @@ interface KanbanColumn {
   id: string | number;
   title: string;
   order: number;
-  
+
   // Optional
-  color?: string;                     // Header accent color
-  icon?: string;                      // PrimeIcons class
+  color?: string; // Header accent color
+  icon?: string; // PrimeIcons class
   collapsed?: boolean;
   hidden?: boolean;
-  wipLimit?: number;                  // Work-in-progress limit
+  wipLimit?: number; // Work-in-progress limit
   draggable?: boolean;
   acceptsCards?: boolean;
   metadata?: Record<string, any>;
@@ -155,7 +160,7 @@ interface KanbanCard {
   columnId: string | number;
   title: string;
   order: number;
-  
+
   // Optional
   description?: string;
   tags?: KanbanTag[];
@@ -170,39 +175,36 @@ interface KanbanCard {
 
 ### Events
 
-| Event | Payload | Description |
-|-------|---------|-------------|
-| `update:columns` | `KanbanColumn[]` | Emitted when columns change |
-| `update:cards` | `KanbanCard[]` | Emitted when cards change |
-| `card-moved` | `CardMoveEvent` | Card moved between columns |
-| `column-moved` | `ColumnMoveEvent` | Column reordered |
-| `card-click` | `CardClickEvent` | Card clicked |
-| `card-update` | `CardUpdateEvent` | Card data updated |
-| `column-update` | `ColumnUpdateEvent` | Column data updated |
-| `board-change` | `BoardChangeEvent` | Board state changed |
-| `drag-start` | `DragStartEvent` | Drag operation started |
-| `drag-end` | `DragEndEvent` | Drag operation ended |
+| Event            | Payload             | Description                 |
+| ---------------- | ------------------- | --------------------------- |
+| `update:columns` | `KanbanColumn[]`    | Emitted when columns change |
+| `update:cards`   | `KanbanCard[]`      | Emitted when cards change   |
+| `card-moved`     | `CardMoveEvent`     | Card moved between columns  |
+| `column-moved`   | `ColumnMoveEvent`   | Column reordered            |
+| `card-click`     | `CardClickEvent`    | Card clicked                |
+| `card-update`    | `CardUpdateEvent`   | Card data updated           |
+| `column-update`  | `ColumnUpdateEvent` | Column data updated         |
+| `board-change`   | `BoardChangeEvent`  | Board state changed         |
+| `drag-start`     | `DragStartEvent`    | Drag operation started      |
+| `drag-end`       | `DragEndEvent`      | Drag operation ended        |
 
 ### Slots
 
-| Slot Name | Props | Description |
-|-----------|-------|-------------|
-| `toolbar` | `{ columns, cards, swimlanes }` | Board toolbar area |
-| `column-header` | `{ column, cardCount, isOverLimit }` | Custom column header |
-| `column-footer` | `{ column, cardCount }` | Custom column footer |
-| `card` | `{ card, column, index, isDragging }` | Custom card rendering |
-| `card-overlay` | `{ card, column }` | Overlay on card (e.g., actions) |
-| `empty-column` | `{ column }` | Empty column placeholder |
+| Slot Name       | Props                                 | Description                     |
+| --------------- | ------------------------------------- | ------------------------------- |
+| `toolbar`       | `{ columns, cards, swimlanes }`       | Board toolbar area              |
+| `column-header` | `{ column, cardCount, isOverLimit }`  | Custom column header            |
+| `column-footer` | `{ column, cardCount }`               | Custom column footer            |
+| `card`          | `{ card, column, index, isDragging }` | Custom card rendering           |
+| `card-overlay`  | `{ card, column }`                    | Overlay on card (e.g., actions) |
+| `empty-column`  | `{ column }`                          | Empty column placeholder        |
 
 ## 🎨 Customization Examples
 
 ### Custom Card Rendering
 
 ```vue
-<KanbanBoard
-  v-model:columns="columns"
-  v-model:cards="cards"
->
+<KanbanBoard v-model:columns="columns" v-model:cards="cards">
   <template #card="{ card, column }">
     <div class="custom-card">
       <h3>{{ card.title }}</h3>
@@ -216,10 +218,7 @@ interface KanbanCard {
 ### Custom Column Header
 
 ```vue
-<KanbanBoard
-  v-model:columns="columns"
-  v-model:cards="cards"
->
+<KanbanBoard v-model:columns="columns" v-model:cards="cards">
   <template #column-header="{ column, cardCount, isOverLimit }">
     <div class="custom-header">
       <h3>{{ column.title }}</h3>
@@ -235,10 +234,7 @@ interface KanbanCard {
 ### Board Toolbar
 
 ```vue
-<KanbanBoard
-  v-model:columns="columns"
-  v-model:cards="cards"
->
+<KanbanBoard v-model:columns="columns" v-model:cards="cards">
   <template #toolbar="{ columns, cards }">
     <div class="toolbar">
       <h2>Project Board</h2>
@@ -255,23 +251,23 @@ Enable swimlanes to group cards horizontally:
 
 ```typescript
 const swimlanes = ref<KanbanSwimlane[]>([
-  { id: 'urgent', title: 'Urgent', order: 0 },
-  { id: 'normal', title: 'Normal', order: 1 }
+  { id: "urgent", title: "Urgent", order: 0 },
+  { id: "normal", title: "Normal", order: 1 },
 ]);
 
 const options = ref({
-  enableSwimlanes: true
+  enableSwimlanes: true,
 });
 
 // Cards with swimlane assignment
 const cards = ref<KanbanCard[]>([
   {
     id: 1,
-    columnId: 'todo',
-    swimlaneId: 'urgent',
-    title: 'Critical bug fix',
-    order: 0
-  }
+    columnId: "todo",
+    swimlaneId: "urgent",
+    title: "Critical bug fix",
+    order: 0,
+  },
 ]);
 ```
 
@@ -293,11 +289,11 @@ Set work-in-progress limits on columns:
 ```typescript
 const columns = ref<KanbanColumn[]>([
   {
-    id: 'in-progress',
-    title: 'In Progress',
+    id: "in-progress",
+    title: "In Progress",
     order: 1,
-    wipLimit: 3  // Maximum 3 cards
-  }
+    wipLimit: 3, // Maximum 3 cards
+  },
 ]);
 ```
 
@@ -308,14 +304,14 @@ The column header will highlight when over the limit.
 Use the `CardPriority` enum for priority indicators:
 
 ```typescript
-import { CardPriority } from '@incoder/kanban';
+import { CardPriority } from "@incoder/kanban";
 
 const card: KanbanCard = {
   id: 1,
-  columnId: 'todo',
-  title: 'Fix critical bug',
+  columnId: "todo",
+  title: "Fix critical bug",
   priority: CardPriority.HIGHEST,
-  order: 0
+  order: 0,
 };
 ```
 
@@ -324,16 +320,14 @@ const card: KanbanCard = {
 ```typescript
 const card: KanbanCard = {
   id: 1,
-  columnId: 'todo',
-  title: 'Implement feature',
+  columnId: "todo",
+  title: "Implement feature",
   tags: [
-    { id: 1, label: 'Frontend', color: '#3b82f6' },
-    { id: 2, label: 'Urgent', color: '#ef4444' }
+    { id: 1, label: "Frontend", color: "#3b82f6" },
+    { id: 2, label: "Urgent", color: "#ef4444" },
   ],
-  assignees: [
-    { id: 1, name: 'John Doe', avatar: '/avatars/john.jpg' }
-  ],
-  order: 0
+  assignees: [{ id: 1, name: "John Doe", avatar: "/avatars/john.jpg" }],
+  order: 0,
 };
 ```
 
@@ -342,17 +336,17 @@ const card: KanbanCard = {
 ```typescript
 const card: KanbanCard = {
   id: 1,
-  columnId: 'done',
-  title: 'Locked card',
-  draggable: false,  // This card cannot be dragged
-  order: 0
+  columnId: "done",
+  title: "Locked card",
+  draggable: false, // This card cannot be dragged
+  order: 0,
 };
 
 const column: KanbanColumn = {
-  id: 'done',
-  title: 'Done',
-  acceptsCards: false,  // Cannot drop cards here
-  order: 2
+  id: "done",
+  title: "Done",
+  acceptsCards: false, // Cannot drop cards here
+  order: 2,
 };
 ```
 
@@ -364,7 +358,7 @@ const column: KanbanColumn = {
 const handleCardMoved = (event: CardMoveEvent) => {
   console.log(`Card ${event.card.title} moved`);
   console.log(`From: ${event.fromColumnId} to ${event.toColumnId}`);
-  
+
   // Make API call to persist the change
   await api.moveCard(event.card.id, event.toColumnId);
 };
@@ -395,8 +389,8 @@ The component automatically inherits your PrimeVue theme. No additional configur
 
 ```typescript
 // main.ts
-import PrimeVue from 'primevue/config';
-import 'primevue/resources/themes/lara-dark-blue/theme.css';
+import PrimeVue from "primevue/config";
+import "primevue/resources/themes/lara-dark-blue/theme.css";
 
 app.use(PrimeVue);
 ```
@@ -420,8 +414,8 @@ The board automatically scrolls horizontally on smaller screens. You can control
 
 ```typescript
 const options = ref({
-  horizontalScroll: true,  // Enable horizontal scroll
-  columnWidth: '280px'     // Adjust for mobile
+  horizontalScroll: true, // Enable horizontal scroll
+  columnWidth: "280px", // Adjust for mobile
 });
 ```
 
@@ -453,8 +447,8 @@ import type {
   KanbanBoardOptions,
   CardMoveEvent,
   CardClickEvent,
-  BoardChangeEvent
-} from '@incoder/kanban';
+  BoardChangeEvent,
+} from "@incoder/kanban";
 ```
 
 ## 🏗️ Build & Development
@@ -477,6 +471,14 @@ npm run type-check
 
 MIT © [u40butch]
 
+## 📚 Documentation
+
+- **[Getting Started](./GETTING_STARTED.md)** - Comprehensive setup guide
+- **[Laravel Integration](./LARAVEL.md)** - Laravel + Inertia.js guide with backend examples
+- **[Examples](./EXAMPLES.md)** - Practical usage examples
+- **[Migration Guide](./MIGRATION.md)** - Upgrading from v1.x to v2.0
+- **[Changelog](./CHANGELOG.md)** - Release notes and version history
+
 ## 🤝 Contributing
 
 Contributions welcome! Please read our contributing guidelines first.
@@ -485,10 +487,6 @@ Contributions welcome! Please read our contributing guidelines first.
 
 Found a bug? Please [open an issue](https://github.com/yourusername/incoder-kanban/issues).
 
-## 📝 Changelog
-
-See [CHANGELOG.md](./CHANGELOG.md) for release notes.
-
 ---
 
-Made with ❤️ using Vue 3 and PrimeVue
+Made with ❤️ using Vue 3 and PrimeVue 4
