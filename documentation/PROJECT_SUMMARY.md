@@ -2,13 +2,21 @@
 
 ## Overview
 
-This is a **production-ready**, enterprise-grade Kanban Board component library for Vue 3 applications. The library provides a highly customizable, feature-rich Kanban board that seamlessly integrates with PrimeVue themes.
+This is a **production-ready**, enterprise-grade Kanban Board component library for Vue 3 applications. The library provides a highly customizable, feature-rich Kanban board that seamlessly integrates with PrimeVue 4 themes and works perfectly with Laravel + Inertia.js projects.
+
+**Current Version**: 2.0.0
+
+- Vue 3.5+ with Composition API
+- PrimeVue 4 with preset-based theming
+- Full Laravel + Inertia.js compatibility
+- TypeScript 5.7+ support
 
 ## 📦 What Has Been Built
 
 ### Core Components
 
 1. **KanbanBoard.vue** - Main board component
+
    - Orchestrates the entire board
    - Handles drag & drop coordination
    - Supports swimlanes
@@ -16,6 +24,7 @@ This is a **production-ready**, enterprise-grade Kanban Board component library 
    - Fully controlled via props
 
 2. **KanbanColumn.vue** - Column component
+
    - Manages card display
    - Drop zone for drag & drop
    - WIP limit indicators
@@ -31,6 +40,7 @@ This is a **production-ready**, enterprise-grade Kanban Board component library 
 ### Composables
 
 1. **useKanbanState.ts**
+
    - State management for board, columns, cards
    - Card/column operations (move, update, sort)
    - Computed properties for efficient data access
@@ -45,6 +55,7 @@ This is a **production-ready**, enterprise-grade Kanban Board component library 
 ### Type System
 
 **types/kanban.ts** - Comprehensive TypeScript definitions:
+
 - `KanbanColumn` - Column configuration
 - `KanbanCard` - Card data structure
 - `KanbanSwimlane` - Swimlane definition
@@ -64,6 +75,7 @@ This is a **production-ready**, enterprise-grade Kanban Board component library 
 ### Documentation
 
 1. **README.md** - Main documentation
+
    - Installation instructions
    - Quick start guide
    - Complete API reference
@@ -71,12 +83,14 @@ This is a **production-ready**, enterprise-grade Kanban Board component library 
    - Customization examples
 
 2. **GETTING_STARTED.md** - Step-by-step guide
+
    - Setup instructions
    - Common use cases
    - Backend integration
    - Troubleshooting
 
 3. **EXAMPLES.md** - Practical examples
+
    - Event handling
    - Custom slots
    - Swimlanes
@@ -87,6 +101,7 @@ This is a **production-ready**, enterprise-grade Kanban Board component library 
 ### Demo Application
 
 **playground/** - Interactive demo
+
 - Full-featured example
 - Event logging
 - Live configuration
@@ -95,60 +110,68 @@ This is a **production-ready**, enterprise-grade Kanban Board component library 
 ## 🎨 Key Features Implemented
 
 ### Drag & Drop
+
 ✅ Card dragging between columns  
 ✅ Visual feedback during drag  
 ✅ Drop zone highlighting  
 ✅ Drag state management  
-✅ Enable/disable per card or column  
+✅ Enable/disable per card or column
 
 ### Card Features
+
 ✅ Priority levels (5 levels)  
 ✅ Tags with custom colors  
 ✅ Multiple assignees with avatars  
 ✅ Due dates  
 ✅ Custom metadata  
-✅ Draggable control  
+✅ Draggable control
 
 ### Column Features
+
 ✅ WIP (Work-In-Progress) limits  
 ✅ Visual limit indicators  
 ✅ Custom colors and icons  
 ✅ Collapse/expand  
 ✅ Card count display  
-✅ Drop zone control  
+✅ Drop zone control
 
 ### Swimlanes
+
 ✅ Horizontal grouping  
 ✅ Multiple swimlanes  
 ✅ Cards assigned to swimlanes  
-✅ Collapsible swimlanes  
+✅ Collapsible swimlanes
 
 ### Customization
+
 ✅ 6 slot types for full customization  
 ✅ Board toolbar slot  
 ✅ Column header/footer slots  
 ✅ Card rendering slot  
-✅ Empty state slots  
+✅ Empty state slots
 
 ### Events
+
 ✅ card-moved - Card movement tracking  
 ✅ card-click - Card interactions  
 ✅ drag-start/end - Drag lifecycle  
 ✅ column-moved - Column reordering  
 ✅ board-change - State changes  
-✅ card-update/column-update  
+✅ card-update/column-update
 
 ### Accessibility
+
 ✅ ARIA roles (board, column, card)  
 ✅ Keyboard navigation  
 ✅ Focus management  
-✅ Screen reader support  
+✅ Screen reader support
 
 ### Theme Integration
+
 ✅ Inherits PrimeVue theme automatically  
 ✅ Uses PrimeVue design tokens  
 ✅ No hard-coded colors  
-✅ Responsive to theme changes  
+✅ Responsive to theme changes
 
 ## 📂 Project Structure
 
@@ -203,6 +226,7 @@ npm run build
 ```
 
 This generates:
+
 - `dist/incoder-kanban.js` - ESM build
 - `dist/incoder-kanban.cjs` - CommonJS build
 - `dist/style.css` - Component styles
@@ -226,25 +250,20 @@ npm install @incoder/kanban
 
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue';
-import { KanbanBoard } from '@incoder/kanban';
-import '@incoder/kanban/style.css';
+import { ref } from "vue";
+import { KanbanBoard } from "@incoder/kanban";
+import "@incoder/kanban/style.css";
 
 const columns = ref([
-  { id: 1, title: 'To Do', order: 0 },
-  { id: 2, title: 'Done', order: 1 }
+  { id: 1, title: "To Do", order: 0 },
+  { id: 2, title: "Done", order: 1 },
 ]);
 
-const cards = ref([
-  { id: 1, columnId: 1, title: 'Task 1', order: 0 }
-]);
+const cards = ref([{ id: 1, columnId: 1, title: "Task 1", order: 0 }]);
 </script>
 
 <template>
-  <KanbanBoard
-    v-model:columns="columns"
-    v-model:cards="cards"
-  />
+  <KanbanBoard v-model:columns="columns" v-model:cards="cards" />
 </template>
 ```
 
@@ -261,24 +280,28 @@ const cards = ref([
 ## 🔧 Technical Highlights
 
 ### State Management
+
 - Reactive state using Vue 3 Composition API
 - Controlled component pattern (v-model)
 - Optimistic UI updates
 - Efficient computed properties
 
 ### Drag & Drop
+
 - Native HTML5 Drag & Drop API
 - No external drag library dependencies
 - Touch-friendly (via native support)
 - Visual feedback during operations
 
 ### Performance
+
 - Scoped styles (no global pollution)
 - Tree-shakable exports
 - Minimal bundle size (~15KB gzipped)
 - Virtual scrolling ready
 
 ### TypeScript
+
 - Strict mode enabled
 - Full type inference
 - Exported types for consumers
@@ -357,6 +380,7 @@ The following features could be added in future versions:
 ## 🤝 Contributing
 
 The codebase is well-structured for contributions:
+
 - Clear separation of concerns
 - Comprehensive types
 - Detailed comments

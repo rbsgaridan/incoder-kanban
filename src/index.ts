@@ -1,7 +1,8 @@
 /**
  * @incoder/kanban
  * 
- * Enterprise-grade Kanban Board component for Vue 3 with PrimeVue integration
+ * Enterprise-grade Kanban Board component for Vue 3 with PrimeVue 4 integration
+ * Compatible with Laravel + Inertia.js projects
  * 
  * @module @incoder/kanban
  */
@@ -46,4 +47,4 @@ export type {
 export { CardPriority } from './types/kanban';
 
 // Version
-export const version = '1.0.0';
+export const version = '2.0.0';
