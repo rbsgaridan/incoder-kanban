@@ -1,6 +1,6 @@
 {
-  "name": "@incoder/kanban",
-  "version": "2.0.0",
+  "name": "@u40butch/kanban",
+  "version": "0.0.2",
   "description": "Enterprise-grade Kanban Board component for Vue 3 with PrimeVue 4 integration",
   "type": "module",
   "main": "./dist/incoder-kanban.cjs",

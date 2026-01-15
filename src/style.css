@@ -18,6 +18,7 @@
   --primary-color: #3b82f6;
   --primary-color-text: #ffffff;
   --border-radius: 6px;
+  --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 /* Global drag state classes */
